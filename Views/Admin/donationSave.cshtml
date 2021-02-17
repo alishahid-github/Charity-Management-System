@@ -1,0 +1,104 @@
+﻿@using Microsoft.Data.SqlClient;
+@using System.Data;
+
+@{
+    ViewData["Title"] = "Admin Home View Donation Request";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    
+
+
+    SqlConnection con = new SqlConnection("Data Source=Ali-Shahid;Initial Catalog=CharityManagement;Integrated Security=True");
+    con.Open();
+
+    SqlCommand command = new SqlCommand("SELECT DA_Id, DA_Name, DA_IncomeSource, DA_Category, DA_Address, DA_ContactNo, DA_Isdeserving FROM DonationAcceptor WHERE DA_Isdeserving=1", con);
+
+    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+    DataSet dataSet = new DataSet();
+    dataAdapter.Fill(dataSet);
+
+    DataTable table = dataSet.Tables[0];
+    int rowCount = table.Rows.Count;
+    con.Close();
+
+   
+}
+
+<body>
+    <main id="main">
+        <section class="inner-page">
+            <div class="container text-center">
+                <br /><br /><br /> <br /><br /><br /><br />
+                @if (rowCount > 0)
+                {
+                    <div class="">
+                        <table class="table table-hover table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Income Source</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Contact Number</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Amount</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < table.Rows.Count; i++)
+                                {
+
+                                    <tr>
+
+                                        <td>@table.Rows[i].ItemArray[1]</td>
+                                        <td>@table.Rows[i].ItemArray[2]</td>
+                                        <td>@table.Rows[i].ItemArray[3]</td>
+                                        <td>@table.Rows[i].ItemArray[5]</td>
+                                        <td>@table.Rows[i].ItemArray[4]</td>
+                                        <td>
+                                            <div class="input-group mb-3">
+                                                <input type="number" name="amount" class="form-control" id="amount_@i" placeholder="Amount" aria-describedby="button-addon2">
+                                                <div class="input-group-append">
+                                                    <form action="~/Admin/save_done_give/@table.Rows[i].ItemArray[0]" method="POST" role="form" onsubmit='return ask()'>
+                                                        <input type="hidden"  id="Amount_@i" value="1"name="_Amount" />
+                                                        <button class="btn btn-outline-success" type="submit" id="button-addon2"
+                                                                onclick="getAmount('Amount_@i', 'amount_@i')">
+                                                            Give Donation
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                 }
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <h1 style="color:black;">
+                        There is no deserving Donee <span class="bx bx-check-circle"></span>
+                    </h1>
+                }
+                
+
+            </div>
+        </section>
+        <script>
+            function ask() {
+                return confirm("Do you want to Give Donation?");
+            }
+
+            function getAmount(amountiD, amount2ID ) {
+                
+                document.getElementById(amountiD).value = document.getElementById(amount2ID).value;                
+            }
+        </script>
+    </main><!-- End #main -->
+
+</body>
+
+
+
+

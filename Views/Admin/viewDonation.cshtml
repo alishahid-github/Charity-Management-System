@@ -1,0 +1,86 @@
+﻿@using Microsoft.Data.SqlClient;
+@using System.Data;
+
+
+@{
+    ViewData["Title"] = "Admin Home View Donations";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    
+
+
+
+    SqlConnection con = new SqlConnection("Data Source=Ali-Shahid;Initial Catalog=CharityManagement;Integrated Security=True");
+    con.Open();
+
+    SqlCommand command = new SqlCommand("SELECT D_Id, D_DonorName, CONVERT(VARCHAR(11), D_CreationDate, 106 ), D_Amount, D_Category, D_Card," +
+        "CONVERT(VARCHAR(11),  D_ExpiryDate, 106), D_CVV, D_Email FROM Donation", con);
+
+    SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+    DataSet dataSet = new DataSet();
+    dataAdapter.Fill(dataSet);
+    con.Close();
+    DataTable table = dataSet.Tables[0];
+}
+
+<body>
+    <main id="main" data-aos="fade-up">
+
+        <!-- ======= Breadcrumbs ======= -->
+        <section class="breadcrumbs">
+            <div class="container">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>View Donation</h2>
+
+                </div>
+
+            </div>
+        </section><!-- End Breadcrumbs -->
+
+        <section class="inner-page">
+            <section class="container">
+                <div class="table-responsive-md">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Donation ID</th>
+                                <th scope="col">Donor Name</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Card Numner</th>
+                                <th scope="col">Expiry Date</th>
+                                <th scope="col">CVV</th>
+                                <th scope="col">Email ID</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < table.Rows.Count; i++)
+                            {
+
+                            <tr>
+                                <th scope="row">@table.Rows[i].ItemArray[0]</th>
+                                <td>@table.Rows[i].ItemArray[1]</td>
+                                <td>@table.Rows[i].ItemArray[3]</td>
+                                <td>@table.Rows[i].ItemArray[4]</td>
+                                <td>@table.Rows[i].ItemArray[5]</td>
+                                <td>@table.Rows[i].ItemArray[6]</td>
+                                <td>@table.Rows[i].ItemArray[7]</td>
+                                <td>@table.Rows[i].ItemArray[8]</td>
+                                <td>@table.Rows[i].ItemArray[2]</td>
+
+                            </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main><!-- End #main -->
+
+
+</body>
